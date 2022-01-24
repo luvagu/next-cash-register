@@ -37,39 +37,54 @@ const iconcClorVairants = {
 	blue: 'text-blue-500',
 }
 
-function RadioItemsGroup({ items, getSelected }) {
+function RadioItemsGroup({
+	items,
+	getSelected,
+	isGroupDisabled,
+	isOptionsDisabled,
+}) {
 	const [selected, setSelected] = useState(null)
 
 	const handleChange = value => {
-		const { id, name } = value
+		const { id, name, operation } = value
 		setSelected(value)
-		getSelected({ id, name })
+		getSelected({ id, name, operation })
 	}
 
 	return (
-		<RadioGroup value={selected} onChange={handleChange}>
+		<RadioGroup
+			value={selected}
+			onChange={handleChange}
+			disabled={isGroupDisabled}
+		>
 			<RadioGroup.Label className='sr-only'>Options</RadioGroup.Label>
 			<div className='grid grid-cols-[repeat(auto-fill,_minmax(100px,_1fr))] items-start gap-2 sm:gap-4'>
 				{items.map(item => (
 					<RadioGroup.Option
+						disabled={
+							isOptionsDisabled && selected?.id !== item.id ? true : false
+						}
 						key={item.id}
 						value={item}
 						className={({ active, checked }) =>
 							classNames(
-								'relative flex flex-col justify-center items-center gap-1 sm:gap-2 px-4 py-4 rounded shadow-md cursor-pointer focus:outline-none',
+								'relative flex flex-col justify-center items-center gap-1 sm:gap-2 px-4 py-4 rounded shadow-md focus:outline-none',
 								active &&
 									'ring-2 ring-offset-2 ring-offset-sky-300 ring-white ring-opacity-60',
-								checked ? 'bg-sky-900 bg-opacity-75 text-white' : 'bg-white'
+								checked ? 'bg-sky-900 bg-opacity-75' : 'bg-white',
+								isGroupDisabled && 'bg-slate-300 bg-opacity-75',
+								isGroupDisabled ? 'cursor-default' : 'cursor-pointer '
 							)
 						}
 					>
-						{({ active, checked }) => (
+						{({ checked }) => (
 							<Fragment>
 								<RadioGroup.Label
 									as='h2'
 									className={classNames(
 										'text-xs sm:text-sm font-semibold whitespace-nowrap truncate',
-										checked ? 'text-white' : 'text-amber-900'
+										checked ? 'text-white' : 'text-amber-900',
+										isGroupDisabled && 'text-gray-600'
 									)}
 								>
 									{item.name}
@@ -77,8 +92,9 @@ function RadioItemsGroup({ items, getSelected }) {
 								<RadioGroup.Description
 									className={classNames(
 										'inline',
-										checked
-											? 'text-sky-100'
+										checked && 'text-opacity-75',
+										isGroupDisabled
+											? 'text-gray-600'
 											: iconcClorVairants[item?.variant || 'default']
 									)}
 								>
@@ -96,6 +112,8 @@ function RadioItemsGroup({ items, getSelected }) {
 RadioItemsGroup.defaultProps = {
 	items: [],
 	getSelected: () => {},
+	isGroupDisabled: false,
+	isOptionsDisabled: false,
 }
 
 export default RadioItemsGroup
