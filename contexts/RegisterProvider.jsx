@@ -1,4 +1,5 @@
 import { createContext, useContext, useReducer } from 'react'
+import { PAYMENT_METHODS, TRANSACTIONS } from '../config'
 
 const RegisterContext = createContext()
 
@@ -14,8 +15,10 @@ const initialState = {
 	isTransactionSelected: false,
 	isSetTransactionAmount: false,
 	isPaymentMethodSelected: false,
-	transaction: null,
-	paymentMethod: null,
+	transactions: TRANSACTIONS,
+	selectedTransaction: null,
+	paymentMethods: PAYMENT_METHODS,
+	selectedPaymentMethod: null,
 }
 
 const reducer = (state, { type, payload }) => {
@@ -26,25 +29,25 @@ const reducer = (state, { type, payload }) => {
 				...state,
 				isTransactionSelected: true,
 				isSetTransactionAmount: false,
-				transaction: payload,
+				selectedTransaction: payload,
 			}
 		}
 		case ACTIONS.UPDATE_TRANSACTION_VALUE: {
 			return {
 				...state,
 				isSetTransactionAmount: payload.amount > 0,
-				transaction: {
-					...state.transaction,
+				selectedTransaction: {
+					...state.selectedTransaction,
 					...payload,
 				},
-				paymentMethod: null,
+				selectedPaymentMethod: null,
 			}
 		}
 		case ACTIONS.SET_PAYMENT_METHOD: {
 			return {
 				...state,
 				isPaymentMethodSelected: true,
-				paymentMethod: payload,
+				selectedPaymentMethod: payload,
 			}
 		}
 		default:
