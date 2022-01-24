@@ -37,6 +37,12 @@ const iconColorVairants = {
 	blue: 'text-blue-500',
 }
 
+const Icon = ({ icon, ...props }) => {
+	const DynamicIcon = icon
+	if (DynamicIcon) return <DynamicIcon {...props} />
+	return null
+}
+
 function RadioItemsGroup({
 	items,
 	getSelected,
@@ -98,7 +104,7 @@ function RadioItemsGroup({
 											: iconColorVairants[item?.color || 'default']
 									)}
 								>
-									<item.icon className='w-5 h-5 sm:w-6 sm:h-6' />
+									<Icon icon={item.icon} className='w-5 h-5 sm:w-6 sm:h-6' />
 								</RadioGroup.Description>
 							</Fragment>
 						)}
