@@ -1,52 +1,103 @@
+import { BsBank2, BsCreditCardFill } from 'react-icons/bs'
+import { BiTransfer } from 'react-icons/bi'
+import {
+	FaFileInvoice,
+	FaFileInvoiceDollar,
+	FaHandHoldingUsd,
+	FaMoneyCheck,
+	FaReceipt,
+} from 'react-icons/fa'
+import { GiBanknote, GiPayMoney, GiTakeMyMoney } from 'react-icons/gi'
+import { HiReceiptRefund } from 'react-icons/hi'
+
 export const TRANSACTIONS = [
 	{
+		id: 't-nv',
 		name: 'Notas Venta',
-		variant: 'default',
+		icon: props => <FaReceipt {...props} />,
+		variant: 'orange',
 		operation: '+',
 	},
 	{
-		name: 'Facturas',
-		variant: 'default',
+		id: 't-fc',
+		name: 'Factura',
+		icon: props => <FaFileInvoiceDollar {...props} />,
+		variant: 'blue',
 		operation: '+',
 	},
 	{
+		id: 't-fr',
 		name: 'Fact+Ret',
-		variant: 'default',
+		icon: props => <FaFileInvoice {...props} />,
+		variant: 'sky',
 		operation: '+',
 	},
 	{
+		id: 't-ft',
 		name: 'Fact+TC',
-		variant: 'default',
+		icon: props => <FaFileInvoice {...props} />,
+		variant: 'cyan',
 		operation: '+',
 	},
 	{
+		id: 't-cb',
 		name: 'Cobros',
-		variant: 'default',
+		icon: props => <FaHandHoldingUsd {...props} />,
+		variant: 'green',
 		operation: '+',
 	},
 	{
+		id: 't-dr',
 		name: 'Dev Ret',
-		variant: 'default',
+		icon: props => <HiReceiptRefund {...props} />,
+		variant: 'pink',
 		operation: '-',
 	},
 	{
+		id: 't-ad',
+		name: 'Adelantos',
+		icon: props => <GiTakeMyMoney {...props} />,
+		variant: 'rose',
+		operation: '-',
+	},
+	{
+		id: 't-ga',
 		name: 'Gastos',
-		variant: 'default',
+		icon: props => <GiPayMoney {...props} />,
+		variant: 'red',
 		operation: '-',
 	},
 ]
 
 export const PAYMENT_METHODS = [
 	{
+		id: 'p-ef',
 		name: 'Efectivo',
+		icon: props => <GiBanknote {...props} />,
 		variant: 'default',
 	},
 	{
+		id: 'p-ch',
 		name: 'Cheque',
+		icon: props => <FaMoneyCheck {...props} />,
 		variant: 'default',
 	},
 	{
+		id: 'p-dp',
+		name: 'Deposito',
+		icon: props => <BsBank2 {...props} />,
+		variant: 'default',
+	},
+	{
+		id: 'p-tr',
+		name: 'Transferencia',
+		icon: props => <BiTransfer {...props} />,
+		variant: 'default',
+	},
+	{
+		id: 'p-tc',
 		name: 'Tarjeta',
+		icon: props => <BsCreditCardFill {...props} />,
 		variant: 'default',
 	},
 ]
