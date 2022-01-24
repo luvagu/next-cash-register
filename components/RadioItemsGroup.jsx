@@ -2,7 +2,7 @@ import { Fragment, useState } from 'react'
 import { RadioGroup } from '@headlessui/react'
 import { classNames } from '../utils/helpers'
 
-const iconcClorVairants = {
+const iconColorVairants = {
 	// gray variants
 	default: 'text-gray-500',
 	slate: 'text-slate-500',
@@ -95,7 +95,7 @@ function RadioItemsGroup({
 										checked && 'text-opacity-75',
 										isGroupDisabled
 											? 'text-gray-600'
-											: iconcClorVairants[item?.variant || 'default']
+											: iconColorVairants[item?.variant || 'default']
 									)}
 								>
 									<item.icon className='w-5 h-5 sm:w-6 sm:h-6' />
