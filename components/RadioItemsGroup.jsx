@@ -43,12 +43,7 @@ const Icon = ({ icon, ...props }) => {
 	return null
 }
 
-function RadioItemsGroup({
-	items,
-	getSelected,
-	isGroupDisabled,
-	isOptionsDisabled,
-}) {
+function RadioItemsGroup({ items, getSelected, isGroupDisabled }) {
 	const [selected, setSelected] = useState(null)
 
 	const handleChange = value => {
@@ -67,9 +62,7 @@ function RadioItemsGroup({
 			<div className='grid grid-cols-[repeat(auto-fill,_minmax(100px,_1fr))] items-start gap-2 sm:gap-4'>
 				{items.map(item => (
 					<RadioGroup.Option
-						disabled={
-							isOptionsDisabled && selected?.id !== item.id ? true : false
-						}
+						disabled={item.disabled}
 						key={item.id}
 						value={item}
 						className={({ active, checked }) =>
