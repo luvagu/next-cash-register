@@ -17,6 +17,7 @@ export const TRANSACTIONS = [
 		icon: FaReceipt,
 		color: 'orange',
 		operation: '+',
+		disabled: false,
 	},
 	{
 		id: 't-fc',
@@ -24,6 +25,7 @@ export const TRANSACTIONS = [
 		icon: FaFileInvoiceDollar,
 		color: 'blue',
 		operation: '+',
+		disabled: false,
 	},
 	{
 		id: 't-fr',
@@ -31,6 +33,7 @@ export const TRANSACTIONS = [
 		icon: FaFileInvoice,
 		color: 'sky',
 		operation: '+',
+		disabled: false,
 	},
 	{
 		id: 't-ft',
@@ -38,6 +41,7 @@ export const TRANSACTIONS = [
 		icon: FaFileInvoice,
 		color: 'indigo',
 		operation: '+',
+		disabled: false,
 	},
 	{
 		id: 't-cb',
@@ -45,6 +49,7 @@ export const TRANSACTIONS = [
 		icon: FaHandHoldingUsd,
 		color: 'green',
 		operation: '+',
+		disabled: false,
 	},
 	{
 		id: 't-dr',
@@ -52,6 +57,7 @@ export const TRANSACTIONS = [
 		icon: HiReceiptRefund,
 		color: 'pink',
 		operation: '-',
+		disabled: false,
 	},
 	{
 		id: 't-ad',
@@ -59,6 +65,7 @@ export const TRANSACTIONS = [
 		icon: GiTakeMyMoney,
 		color: 'rose',
 		operation: '-',
+		disabled: false,
 	},
 	{
 		id: 't-ga',
@@ -66,6 +73,7 @@ export const TRANSACTIONS = [
 		icon: GiPayMoney,
 		color: 'red',
 		operation: '-',
+		disabled: false,
 	},
 ]
 
@@ -75,29 +83,34 @@ export const PAYMENT_METHODS = [
 		name: 'Efectivo',
 		icon: GiBanknote,
 		color: 'green',
+		disabled: false,
 	},
 	{
 		id: 'p-ch',
 		name: 'Cheque',
 		icon: FaMoneyCheck,
 		color: 'blue',
+		disabled: false,
 	},
 	{
 		id: 'p-dp',
 		name: 'Deposito',
 		icon: BsBank2,
 		color: 'orange',
+		disabled: false,
 	},
 	{
 		id: 'p-tr',
 		name: 'Transferencia',
 		icon: BiTransfer,
 		color: 'emerald',
+		disabled: false,
 	},
 	{
 		id: 'p-tc',
 		name: 'Tarjeta',
 		icon: BsCreditCardFill,
 		color: 'indigo',
+		disabled: false,
 	},
 ]

@@ -47,9 +47,8 @@ function RadioItemsGroup({ items, getSelected, isGroupDisabled }) {
 	const [selected, setSelected] = useState(null)
 
 	const handleChange = value => {
-		const { id, name, operation } = value
 		setSelected(value)
-		getSelected({ id, name, operation })
+		getSelected(value)
 	}
 
 	return (
@@ -62,8 +61,8 @@ function RadioItemsGroup({ items, getSelected, isGroupDisabled }) {
 			<div className='grid grid-cols-[repeat(auto-fill,_minmax(100px,_1fr))] items-start gap-2 sm:gap-4'>
 				{items.map(item => (
 					<RadioGroup.Option
-						disabled={item.disabled}
-						key={item.id}
+						disabled={item?.disabled}
+						key={item?.id}
 						value={item}
 						className={({ active, checked }) =>
 							classNames(
@@ -71,8 +70,9 @@ function RadioItemsGroup({ items, getSelected, isGroupDisabled }) {
 								active &&
 									'ring-2 ring-offset-2 ring-offset-sky-300 ring-white ring-opacity-60',
 								checked ? 'bg-sky-900 bg-opacity-75' : 'bg-white',
-								isGroupDisabled && 'bg-slate-300 bg-opacity-75',
-								isGroupDisabled ? 'cursor-default' : 'cursor-pointer '
+								isGroupDisabled || item?.disabled
+									? 'bg-slate-300 bg-opacity-75 cursor-default'
+									: 'cursor-pointer '
 							)
 						}
 					>
@@ -83,21 +83,21 @@ function RadioItemsGroup({ items, getSelected, isGroupDisabled }) {
 									className={classNames(
 										'text-xs sm:text-sm font-semibold whitespace-nowrap truncate',
 										checked ? 'text-white' : 'text-amber-900',
-										isGroupDisabled && 'text-gray-600'
+										(isGroupDisabled || item?.disabled) && 'text-gray-600'
 									)}
 								>
-									{item.name}
+									{item?.name}
 								</RadioGroup.Label>
 								<RadioGroup.Description
 									className={classNames(
 										'inline',
 										checked && 'text-opacity-75',
-										isGroupDisabled
+										isGroupDisabled || item?.disabled
 											? 'text-gray-600'
 											: iconColorVairants[item?.color || 'default']
 									)}
 								>
-									<Icon icon={item.icon} className='w-5 h-5 sm:w-6 sm:h-6' />
+									<Icon icon={item?.icon} className='w-5 h-5 sm:w-6 sm:h-6' />
 								</RadioGroup.Description>
 							</Fragment>
 						)}

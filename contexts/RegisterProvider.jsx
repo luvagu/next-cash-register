@@ -6,8 +6,8 @@ const RegisterContext = createContext()
 export const useRegister = () => useContext(RegisterContext)
 
 export const ACTIONS = {
-	SELECT_TRANSACTION: 'SELECT_TRANSACTION',
-	UPDATE_TRANSACTION_VALUE: 'UPDATE_TRANSACTION_VALUE',
+	SET_TRANSACTION: 'SET_TRANSACTION',
+	UPDATE_TRANSACTION_AMOUNT: 'UPDATE_TRANSACTION_AMOUNT',
 	SET_PAYMENT_METHOD: 'SET_PAYMENT_METHOD',
 }
 
@@ -23,31 +23,39 @@ const initialState = {
 
 const reducer = (state, { type, payload }) => {
 	console.log({ type, payload })
+
 	switch (type) {
-		case ACTIONS.SELECT_TRANSACTION: {
+		case ACTIONS.SET_TRANSACTION: {
+			const { id, name, operation } = payload
 			return {
 				...state,
 				isTransactionSelected: true,
 				isSetTransactionAmount: false,
-				selectedTransaction: payload,
+				selectedTransaction: { id, name, operation },
 			}
 		}
-		case ACTIONS.UPDATE_TRANSACTION_VALUE: {
+		case ACTIONS.UPDATE_TRANSACTION_AMOUNT: {
+			const { amount } = payload
 			return {
 				...state,
-				isSetTransactionAmount: payload.amount > 0,
+				isSetTransactionAmount: amount > 0,
 				selectedTransaction: {
 					...state.selectedTransaction,
-					...payload,
+					amount,
 				},
 				selectedPaymentMethod: null,
 			}
 		}
 		case ACTIONS.SET_PAYMENT_METHOD: {
+			const { id, name } = payload
 			return {
 				...state,
 				isPaymentMethodSelected: true,
-				selectedPaymentMethod: payload,
+				selectedPaymentMethod: { id, name },
+				transactions: state.transactions.map(item => ({
+					...item,
+					disabled: item.id !== state.selectedTransaction.id,
+				})),
 			}
 		}
 		default:

@@ -34,11 +34,10 @@ export default function Home() {
 						items={transactions}
 						getSelected={transaction =>
 							dispatch({
-								type: ACTIONS.SELECT_TRANSACTION,
+								type: ACTIONS.SET_TRANSACTION,
 								payload: transaction,
 							})
 						}
-						isOptionsDisabled={isPaymentMethodSelected}
 					/>
 					<h1 className='text-base sm:text-lg font-semibold'>
 						2. Ingresar monto de transacción
@@ -55,7 +54,7 @@ export default function Home() {
 						required
 						onChange={e =>
 							dispatch({
-								type: ACTIONS.UPDATE_TRANSACTION_VALUE,
+								type: ACTIONS.UPDATE_TRANSACTION_AMOUNT,
 								payload: { amount: parseFloat(e.target.value) },
 							})
 						}
