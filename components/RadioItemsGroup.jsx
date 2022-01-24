@@ -95,7 +95,7 @@ function RadioItemsGroup({
 										checked && 'text-opacity-75',
 										isGroupDisabled
 											? 'text-gray-600'
-											: iconColorVairants[item?.variant || 'default']
+											: iconColorVairants[item?.color || 'default']
 									)}
 								>
 									<item.icon className='w-5 h-5 sm:w-6 sm:h-6' />
