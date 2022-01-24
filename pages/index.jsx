@@ -1,11 +1,19 @@
 import { useEffect, useRef } from 'react'
 import Layout from '../components/Layout'
 import RadioItemsGroup from '../components/RadioItemsGroup'
-import { PAYMENT_METHODS, TRANSACTIONS } from '../config'
 import { ACTIONS, useRegister } from '../contexts/RegisterProvider'
 
 export default function Home() {
 	const { state, dispatch } = useRegister()
+
+	const {
+		isPaymentMethodSelected,
+		isTransactionSelected,
+		isSetTransactionAmount,
+		selectedTransaction,
+		transactions,
+		paymentMethods,
+	} = state
 
 	console.log(state)
 
@@ -13,7 +21,7 @@ export default function Home() {
 
 	useEffect(() => {
 		amountRef.current.value = undefined
-	}, [state?.transaction?.name])
+	}, [selectedTransaction?.name])
 
 	return (
 		<Layout>
@@ -23,14 +31,14 @@ export default function Home() {
 						1. Seleccionar transacción
 					</h1>
 					<RadioItemsGroup
-						items={TRANSACTIONS}
+						items={transactions}
 						getSelected={transaction =>
 							dispatch({
 								type: ACTIONS.SELECT_TRANSACTION,
 								payload: transaction,
 							})
 						}
-						isOptionsDisabled={state.isPaymentMethodSelected}
+						isOptionsDisabled={isPaymentMethodSelected}
 					/>
 					<h1 className='text-base sm:text-lg font-semibold'>
 						2. Ingresar monto de transacción
@@ -43,7 +51,7 @@ export default function Home() {
 						min={0}
 						step={0.01}
 						placeholder='Ej: 1.85'
-						disabled={!state.isTransactionSelected}
+						disabled={!isTransactionSelected}
 						required
 						onChange={e =>
 							dispatch({
@@ -56,14 +64,14 @@ export default function Home() {
 						3. Seleccionar forma de pago
 					</h1>
 					<RadioItemsGroup
-						items={PAYMENT_METHODS}
+						items={paymentMethods}
 						getSelected={paymentMethod =>
 							dispatch({
 								type: ACTIONS.SET_PAYMENT_METHOD,
 								payload: paymentMethod,
 							})
 						}
-						isGroupDisabled={!state.isSetTransactionAmount}
+						isGroupDisabled={!isSetTransactionAmount}
 					/>
 				</div>
 				<aside className='order-1 md:order-2 h-full bg-slate-400'>
