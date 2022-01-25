@@ -19,11 +19,18 @@ export default function Home() {
 
 	console.log(state)
 
-	const amountRef = useRef(null)
+	const trAmountRef = useRef(null)
+	const exactRef = useRef(null)
+	const pmAmountRef = useRef(null)
 
 	useEffect(() => {
-		amountRef.current.value = undefined
+		trAmountRef.current.value = undefined
 	}, [selectedTransaction?.name])
+
+	useEffect(() => {
+		exactRef.current.checked = false
+		pmAmountRef.current.value = undefined
+	}, [selectedPaymentMethod?.name])
 
 	return (
 		<Layout>
@@ -49,9 +56,9 @@ export default function Home() {
 							<span className='text-gray-500 text-sm sm:text-base'>$</span>
 						</div>
 						<input
-							ref={amountRef}
+							ref={trAmountRef}
 							className={classNames(
-								'block w-full border-0 rounded pl-7 pr-3 text-sm sm:text-base text-gray-900 font-semibold bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-300 focus:ring-white focus:ring-opacity-60 disabled:bg-slate-300 disabled:bg-opacity-75 disabled:border-slate-200 disabled:shadow-none invalid:text-pink-600 focus:invalid:border-pink-500 focus:invalid:ring-pink-500',
+								'block w-full border-0 rounded pl-7 pr-3 text-sm sm:text-base text-gray-900 font-semibold bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/50 disabled:bg-slate-300 disabled:bg-opacity-75 disabled:shadow-none invalid:text-pink-600 focus:invalid:border-pink-500 focus:invalid:ring-pink-500',
 								!isTransactionSelected
 									? 'disabled:text-gray-500'
 									: isPaymentMethodSelected && 'disabled:text-gray-700'
@@ -89,9 +96,18 @@ export default function Home() {
 					<div className='flex flex-col gap-2'>
 						<div className='flex items-center'>
 							<input
+								ref={exactRef}
 								id='exact-amount'
 								type='checkbox'
-								className='h-4 w-4 text-slate-600 focus:ring-slate-500 border-gray-300 rounded'
+								className='h-4 w-4 text-gray-900 border-slate-500 rounded focus:ring-slate-900/75 disabled:border-slate-400
+								disabled:bg-slate-300/75'
+								disabled={!isPaymentMethodSelected}
+								onChange={e => {
+									pmAmountRef.current.value = e.target.checked
+										? selectedTransaction?.amount
+										: undefined
+									pmAmountRef.current.disabled = e.target.checked
+								}}
 							/>
 							<label
 								htmlFor='exact-amount'
@@ -105,22 +121,22 @@ export default function Home() {
 								<span className='text-gray-500 text-sm sm:text-base'>$</span>
 							</div>
 							<input
-								ref={amountRef}
+								ref={pmAmountRef}
 								className={classNames(
-									'block w-full border-0 rounded pl-7 pr-3 text-sm sm:text-base text-gray-900 font-semibold bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-300 focus:ring-white focus:ring-opacity-60 disabled:bg-slate-300 disabled:bg-opacity-75 disabled:border-slate-200 disabled:shadow-none invalid:text-pink-600 focus:invalid:border-pink-500 focus:invalid:ring-pink-500',
+									'block w-full border-0 rounded pl-7 pr-3 text-sm sm:text-base text-gray-900 font-semibold bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/50 disabled:bg-slate-300 disabled:bg-opacity-75 disabled:shadow-none invalid:text-pink-600 focus:invalid:border-pink-500 focus:invalid:ring-pink-500',
 									!isTransactionSelected
 										? 'disabled:text-gray-500'
 										: isPaymentMethodSelected && 'disabled:text-gray-700'
 								)}
 								type='number'
-								min={0}
+								min={selectedTransaction?.amount || 0}
 								step={0.01}
 								placeholder='0.00'
-								disabled={!isTransactionSelected || isPaymentMethodSelected}
+								disabled={!isPaymentMethodSelected}
 								required
 								onChange={e =>
 									dispatch({
-										type: ACTIONS.UPDATE_TRANSACTION_AMOUNT,
+										type: ACTIONS.UPDATE_PAYMENT_AMOUNT,
 										payload: { amount: parseFloat(e.target.value) },
 									})
 								}
@@ -128,9 +144,7 @@ export default function Home() {
 						</div>
 					</div>
 				</div>
-				<aside className='order-1 md:order-2 h-full bg-slate-400'>
-					dfgdsfgs
-				</aside>
+				<aside className='order-1 md:order-2 h-96 lg:h-full bg-amber-300'></aside>
 			</div>
 		</Layout>
 	)

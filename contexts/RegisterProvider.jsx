@@ -7,6 +7,7 @@ export const useRegister = () => useContext(RegisterContext)
 
 // TODO's:
 // - disable payment methods when payment amount is enetered or exact amount checkbox is checked
+// - add radio options for payment amounts [exact / 25c / 50c / 1 / 5 / 10 / 20 / other] and disable option if less than amount
 // - enable exact amount checkbox option to autopopulate payment amount with transaction amount
 // - show "Finalizar Transacccion" button when all steps are done
 // - add cancel buttons next to each step to cancel the step
@@ -16,6 +17,7 @@ export const ACTIONS = {
 	SET_TRANSACTION: 'SET_TRANSACTION',
 	UPDATE_TRANSACTION_AMOUNT: 'UPDATE_TRANSACTION_AMOUNT',
 	SET_PAYMENT_METHOD: 'SET_PAYMENT_METHOD',
+	UPDATE_PAYMENT_AMOUNT: 'UPDATE_PAYMENT_AMOUNT',
 }
 
 const initialState = {
@@ -64,6 +66,16 @@ const reducer = (state, { type, payload }) => {
 					disabled: true,
 					disabledChecked: item.id === state.selectedTransaction.id,
 				})),
+			}
+		}
+		case ACTIONS.UPDATE_PAYMENT_AMOUNT: {
+			const { amount } = payload
+			return {
+				...state,
+				selectedPaymentMethod: {
+					...state.selectedPaymentMethod,
+					amount,
+				},
 			}
 		}
 		default:
