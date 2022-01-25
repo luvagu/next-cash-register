@@ -5,6 +5,13 @@ const RegisterContext = createContext()
 
 export const useRegister = () => useContext(RegisterContext)
 
+// TODO's:
+// - disable payment methods when payment amount is enetered or exact amount checkbox is checked
+// - enable exact amount checkbox option to autopopulate payment amount with transaction amount
+// - show "Finalizar Transacccion" button when all steps are done
+// - add cancel buttons next to each step to cancel the step
+// - Only show steps 3 & 4 for positive transactions
+
 export const ACTIONS = {
 	SET_TRANSACTION: 'SET_TRANSACTION',
 	UPDATE_TRANSACTION_AMOUNT: 'UPDATE_TRANSACTION_AMOUNT',
