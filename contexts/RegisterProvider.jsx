@@ -54,7 +54,8 @@ const reducer = (state, { type, payload }) => {
 				selectedPaymentMethod: { id, name },
 				transactions: state.transactions.map(item => ({
 					...item,
-					disabled: item.id !== state.selectedTransaction.id,
+					disabled: true,
+					disabledChecked: item.id === state.selectedTransaction.id,
 				})),
 			}
 		}
