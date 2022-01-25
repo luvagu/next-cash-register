@@ -18,6 +18,7 @@ export const TRANSACTIONS = [
 		color: 'orange',
 		operation: '+',
 		disabled: false,
+		hasPaymentMethods: true,
 	},
 	{
 		id: 't-fc',
@@ -26,6 +27,7 @@ export const TRANSACTIONS = [
 		color: 'blue',
 		operation: '+',
 		disabled: false,
+		hasPaymentMethods: true,
 	},
 	{
 		id: 't-fr',
@@ -34,6 +36,7 @@ export const TRANSACTIONS = [
 		color: 'sky',
 		operation: '+',
 		disabled: false,
+		hasPaymentMethods: true,
 	},
 	{
 		id: 't-ft',
@@ -42,6 +45,7 @@ export const TRANSACTIONS = [
 		color: 'indigo',
 		operation: '+',
 		disabled: false,
+		hasPaymentMethods: true,
 	},
 	{
 		id: 't-cb',
@@ -50,6 +54,7 @@ export const TRANSACTIONS = [
 		color: 'green',
 		operation: '+',
 		disabled: false,
+		hasPaymentMethods: true,
 	},
 	{
 		id: 't-dr',
@@ -58,6 +63,7 @@ export const TRANSACTIONS = [
 		color: 'pink',
 		operation: '-',
 		disabled: false,
+		hasPaymentMethods: false,
 	},
 	{
 		id: 't-ad',
@@ -66,6 +72,7 @@ export const TRANSACTIONS = [
 		color: 'rose',
 		operation: '-',
 		disabled: false,
+		hasPaymentMethods: false,
 	},
 	{
 		id: 't-ga',
@@ -74,6 +81,7 @@ export const TRANSACTIONS = [
 		color: 'red',
 		operation: '-',
 		disabled: false,
+		hasPaymentMethods: false,
 	},
 ]
 
@@ -94,7 +102,7 @@ export const PAYMENT_METHODS = [
 	},
 	{
 		id: 'p-dp',
-		name: 'Deposito',
+		name: 'Depósito',
 		icon: BsBank2,
 		color: 'orange',
 		disabled: false,
