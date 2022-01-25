@@ -66,13 +66,17 @@ function RadioItemsGroup({ items, getSelected, isGroupDisabled }) {
 						value={item}
 						className={({ active, checked }) =>
 							classNames(
-								'relative flex flex-col justify-center items-center gap-1 sm:gap-2 px-4 py-4 rounded shadow-md focus:outline-none',
+								'relative flex flex-col justify-center items-center gap-1 sm:gap-2 px-4 py-4 rounded shadow-md focus:outline-none select-none',
 								active &&
-									'ring-2 ring-offset-2 ring-offset-sky-300 ring-white ring-opacity-60',
-								checked ? 'bg-sky-900 bg-opacity-75' : 'bg-white',
-								isGroupDisabled || item?.disabled
-									? 'bg-slate-300 bg-opacity-75 cursor-default'
-									: 'cursor-pointer '
+									'ring-2 ring-offset-2 ring-offset-slate-300 ring-white ring-opacity-60',
+								(checked || item?.disabledChecked) &&
+									'bg-slate-900 bg-opacity-75',
+								(isGroupDisabled ||
+									(item?.disabled && !item?.disabledChecked)) &&
+									'bg-slate-300 bg-opacity-75',
+								(!checked || !item?.disabled) && 'bg-white',
+								!isGroupDisabled && !item?.disabled && 'cursor-pointer',
+								(isGroupDisabled || item?.disabled) && 'cursor-default'
 							)
 						}
 					>
@@ -82,8 +86,11 @@ function RadioItemsGroup({ items, getSelected, isGroupDisabled }) {
 									as='h2'
 									className={classNames(
 										'text-xs sm:text-sm font-semibold whitespace-nowrap truncate',
-										checked ? 'text-white' : 'text-amber-900',
-										(isGroupDisabled || item?.disabled) && 'text-gray-600'
+										(checked || item?.disabledChecked) && 'text-white',
+										(isGroupDisabled ||
+											(item?.disabled && !item?.disabledChecked)) &&
+											'text-gray-600',
+										!checked && !item?.disabled && 'text-amber-900'
 									)}
 								>
 									{item?.name}
@@ -91,10 +98,13 @@ function RadioItemsGroup({ items, getSelected, isGroupDisabled }) {
 								<RadioGroup.Description
 									className={classNames(
 										'inline',
-										checked && 'text-opacity-75',
-										isGroupDisabled || item?.disabled
-											? 'text-gray-600'
-											: iconColorVairants[item?.color || 'default']
+										(checked || item?.disabledChecked) && 'text-opacity-95',
+										(isGroupDisabled ||
+											(item?.disabled && !item?.disabledChecked)) &&
+											'text-gray-600',
+										(!isGroupDisabled ||
+											(item?.disabled && item?.disabledChecked)) &&
+											iconColorVairants[item?.color || 'default']
 									)}
 								>
 									<Icon icon={item?.icon} className='w-5 h-5 sm:w-6 sm:h-6' />
@@ -112,7 +122,6 @@ RadioItemsGroup.defaultProps = {
 	items: [],
 	getSelected: () => {},
 	isGroupDisabled: false,
-	isOptionsDisabled: false,
 }
 
 export default RadioItemsGroup
