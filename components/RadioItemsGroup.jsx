@@ -66,7 +66,7 @@ function RadioItemsGroup({ items, getSelected, isGroupDisabled }) {
 						value={item}
 						className={({ active, checked }) =>
 							classNames(
-								'relative flex flex-col justify-center items-center gap-1 sm:gap-2 px-4 py-4 rounded shadow-md focus:outline-none select-none',
+								'relative flex flex-col justify-center items-center gap-1 sm:gap-2 px-4 py-3 rounded shadow-md focus:outline-none select-none',
 								active &&
 									'ring-2 ring-offset-2 ring-offset-slate-300 ring-white ring-opacity-60',
 								(checked || item?.disabledChecked) &&
