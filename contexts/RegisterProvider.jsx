@@ -1,5 +1,5 @@
 import { createContext, useContext, useReducer } from 'react'
-import { PAYMENT_METHODS, TRANSACTIONS } from '../config'
+import { PAYMENT_METHODS, TENDER_AMOUNTS, TRANSACTIONS } from '../config'
 
 const RegisterContext = createContext()
 
@@ -28,6 +28,7 @@ const initialState = {
 	selectedTransaction: null,
 	paymentMethods: PAYMENT_METHODS,
 	selectedPaymentMethod: null,
+	denominations: TENDER_AMOUNTS,
 }
 
 const reducer = (state, { type, payload }) => {
@@ -76,6 +77,11 @@ const reducer = (state, { type, payload }) => {
 					...state.selectedPaymentMethod,
 					amount,
 				},
+				paymentMethods: state.paymentMethods.map(item => ({
+					...item,
+					disabled: true,
+					disabledChecked: item.id === state.selectedPaymentMethod.id,
+				})),
 			}
 		}
 		default:

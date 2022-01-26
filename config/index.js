@@ -122,3 +122,60 @@ export const PAYMENT_METHODS = [
 		disabled: false,
 	},
 ]
+
+export const TENDER_AMOUNTS = [
+	{
+		id: 'quarter',
+		name: '25c',
+		value: 0.25,
+		color: 'green',
+		disabled: false,
+	},
+	{
+		id: 'half',
+		name: '50c',
+		value: 0.5,
+		color: 'green',
+		disabled: false,
+	},
+	{
+		id: 'one',
+		name: '$1',
+		value: 1,
+		color: 'green',
+		disabled: false,
+	},
+	{
+		id: 'five',
+		name: '$5',
+		value: 5,
+		color: 'green',
+		disabled: false,
+	},
+	{
+		id: 'ten',
+		name: '$10',
+		value: 10,
+		color: 'green',
+		disabled: false,
+	},
+	{
+		id: 'twenty',
+		name: '$20',
+		value: 20,
+		color: 'green',
+		disabled: false,
+	},
+	{
+		id: 'exact',
+		name: 'Exacto',
+		color: 'green',
+		disabled: false,
+	},
+	{
+		id: 'other',
+		name: 'Otro',
+		color: 'green',
+		disabled: false,
+	},
+]

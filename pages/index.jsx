@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import Layout from '../components/Layout'
 import RadioItemsGroup from '../components/RadioItemsGroup'
+import RadioOptionsGroup from '../components/RadioOptionsGroup'
 import { ACTIONS, useRegister } from '../contexts/RegisterProvider'
 import { classNames } from '../utils/helpers'
 
@@ -15,6 +16,7 @@ export default function Home() {
 		selectedPaymentMethod,
 		transactions,
 		paymentMethods,
+		denominations,
 	} = state
 
 	console.log(state)
@@ -28,7 +30,7 @@ export default function Home() {
 	}, [selectedTransaction?.name])
 
 	useEffect(() => {
-		exactRef.current.checked = false
+		// exactRef.current.checked = false
 		pmAmountRef.current.value = undefined
 	}, [selectedPaymentMethod?.name])
 
@@ -51,7 +53,7 @@ export default function Home() {
 					<h1 className='text-base sm:text-lg font-semibold'>
 						2. Ingresar monto de transacción
 					</h1>
-					<div className='relative max-w-xs rounded shadow-sm'>
+					<div className='relative max-w-xs rounded shadow-md'>
 						<div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
 							<span className='text-gray-500 text-sm sm:text-base'>$</span>
 						</div>
@@ -93,7 +95,7 @@ export default function Home() {
 					<h1 className='text-base sm:text-lg font-semibold'>
 						4. Ingresar monto de pago
 					</h1>
-					<div className='flex flex-col gap-2'>
+					{/* <div className='flex flex-col gap-2'>
 						<div className='flex items-center'>
 							<input
 								ref={exactRef}
@@ -103,9 +105,14 @@ export default function Home() {
 								disabled:bg-slate-300/75'
 								disabled={!isPaymentMethodSelected}
 								onChange={e => {
-									pmAmountRef.current.value = e.target.checked
+									const amount = e.target.checked
 										? selectedTransaction?.amount
 										: undefined
+									dispatch({
+										type: ACTIONS.UPDATE_PAYMENT_AMOUNT,
+										payload: { amount },
+									})
+									pmAmountRef.current.value = amount
 									pmAmountRef.current.disabled = e.target.checked
 								}}
 							/>
@@ -116,32 +123,37 @@ export default function Home() {
 								Monto de pago exacto?
 							</label>
 						</div>
-						<div className='relative max-w-xs rounded shadow-sm'>
-							<div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
-								<span className='text-gray-500 text-sm sm:text-base'>$</span>
-							</div>
-							<input
-								ref={pmAmountRef}
-								className={classNames(
-									'block w-full border-0 rounded pl-7 pr-3 text-sm sm:text-base text-gray-900 font-semibold bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/50 disabled:bg-slate-300 disabled:bg-opacity-75 disabled:shadow-none invalid:text-pink-600 focus:invalid:border-pink-500 focus:invalid:ring-pink-500',
-									!isTransactionSelected
-										? 'disabled:text-gray-500'
-										: isPaymentMethodSelected && 'disabled:text-gray-700'
-								)}
-								type='number'
-								min={selectedTransaction?.amount || 0}
-								step={0.01}
-								placeholder='0.00'
-								disabled={!isPaymentMethodSelected}
-								required
-								onChange={e =>
-									dispatch({
-										type: ACTIONS.UPDATE_PAYMENT_AMOUNT,
-										payload: { amount: parseFloat(e.target.value) },
-									})
-								}
-							/>
+					</div> */}
+					<RadioOptionsGroup
+						items={denominations}
+						isGroupDisabled={!isPaymentMethodSelected}
+						selectedIndex={denominations.length - 1}
+					/>
+					<div className='relative max-w-xs rounded shadow-md'>
+						<div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
+							<span className='text-gray-500 text-sm sm:text-base'>$</span>
 						</div>
+						<input
+							ref={pmAmountRef}
+							className={classNames(
+								'block w-full border-0 rounded pl-7 pr-3 text-sm sm:text-base text-gray-900 font-semibold bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/50 disabled:bg-slate-300 disabled:bg-opacity-75 disabled:shadow-none invalid:text-pink-600 focus:invalid:border-pink-500 focus:invalid:ring-pink-500',
+								!isTransactionSelected
+									? 'disabled:text-gray-500'
+									: isPaymentMethodSelected && 'disabled:text-gray-700'
+							)}
+							type='number'
+							min={selectedTransaction?.amount || 0}
+							step={0.01}
+							placeholder='0.00'
+							disabled={!isPaymentMethodSelected}
+							required
+							onChange={e =>
+								dispatch({
+									type: ACTIONS.UPDATE_PAYMENT_AMOUNT,
+									payload: { amount: parseFloat(e.target.value) },
+								})
+							}
+						/>
 					</div>
 				</div>
 				<aside className='order-1 md:order-2 h-96 lg:h-full bg-amber-300'></aside>
