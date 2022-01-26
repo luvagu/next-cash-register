@@ -1,69 +1,78 @@
 import { RadioGroup } from '@headlessui/react'
+import { useState } from 'react'
+import { classNames } from '../utils/helpers'
 
-function RadioOptionsGroup({ items }) {
+function RadioOptionsGroup({
+	items,
+	getSelected,
+	isGroupDisabled,
+	selectedIndex,
+}) {
+	const [selected, setSelected] = useState(
+		selectedIndex > -1 ? items[selectedIndex] : null
+	)
+
+	const handleChange = value => {
+		setSelected(value)
+		getSelected(value)
+	}
+
 	return (
 		<RadioGroup
-			value={selectedSize}
-			onChange={setSelectedSize}
-			className='mt-4'
+			value={selected}
+			onChange={handleChange}
+			disabled={isGroupDisabled}
 		>
-			<RadioGroup.Label className='sr-only'>Choose a size</RadioGroup.Label>
-			<div className='grid grid-cols-4 gap-4 sm:grid-cols-8 lg:grid-cols-4'>
+			<RadioGroup.Label className='sr-only'>Options</RadioGroup.Label>
+			<div className='grid grid-cols-[repeat(auto-fill,_minmax(60px,_1fr))] items-start gap-2 sm:gap-4'>
 				{items.map(item => (
 					<RadioGroup.Option
-						key={item.name}
+						disabled={item?.disabled}
+						key={item?.id}
 						value={item}
-						disabled={!item.inStock}
-						className={({ active }) =>
+						className={({ active, checked }) =>
 							classNames(
-								item.inStock
-									? 'bg-white shadow-sm text-gray-900 cursor-pointer'
-									: 'bg-gray-50 text-gray-200 cursor-not-allowed',
-								active ? 'ring-2 ring-indigo-500' : '',
-								'group relative border rounded-md py-3 px-4 flex items-center justify-center text-sm font-medium uppercase hover:bg-gray-50 focus:outline-none sm:flex-1 sm:py-6'
+								'relative flex justify-center items-center px-4 py-3 rounded shadow-md focus:outline-none select-none transition-colors',
+								active &&
+									'ring-2 ring-offset-2 ring-offset-slate-300 ring-white ring-opacity-60',
+								(checked || item?.disabledChecked) &&
+									'bg-slate-900 bg-opacity-75',
+								(isGroupDisabled ||
+									(item?.disabled && !item?.disabledChecked)) &&
+									'bg-slate-300 bg-opacity-75',
+								(!checked || !item?.disabled) && 'bg-white',
+								!isGroupDisabled && !item?.disabled && 'cursor-pointer',
+								(isGroupDisabled || item?.disabled) && 'cursor-default'
 							)
 						}
 					>
-						{({ active, checked }) => (
-							<>
-								<RadioGroup.Label as='p'>{item.name}</RadioGroup.Label>
-								{item.inStock ? (
-									<div
-										className={classNames(
-											active ? 'border' : 'border-2',
-											checked ? 'border-indigo-500' : 'border-transparent',
-											'absolute -inset-px rounded-md pointer-events-none'
-										)}
-										aria-hidden='true'
-									/>
-								) : (
-									<div
-										aria-hidden='true'
-										className='absolute -inset-px rounded-md border-2 border-gray-200 pointer-events-none'
-									>
-										<svg
-											className='absolute inset-0 w-full h-full text-gray-200 stroke-2'
-											viewBox='0 0 100 100'
-											preserveAspectRatio='none'
-											stroke='currentColor'
-										>
-											<line
-												x1={0}
-												y1={100}
-												x2={100}
-												y2={0}
-												vectorEffect='non-scaling-stroke'
-											/>
-										</svg>
-									</div>
+						{({ checked }) => (
+							<RadioGroup.Label
+								as='h2'
+								className={classNames(
+									'text-xs sm:text-sm font-semibold whitespace-nowrap',
+									(checked || item?.disabledChecked) && 'text-white',
+									(isGroupDisabled ||
+										(item?.disabled && !item?.disabledChecked)) &&
+										'text-gray-600',
+									!checked && !item?.disabled && 'text-amber-900'
 								)}
-							</>
+							>
+								{item?.name}
+							</RadioGroup.Label>
 						)}
 					</RadioGroup.Option>
 				))}
 			</div>
 		</RadioGroup>
 	)
+}
+
+RadioOptionsGroup.defaultProps = {
+	items: [],
+	getSelected: () => {},
+	isGroupDisabled: false,
+	selectedIndex: -1,
 }
 
 export default RadioOptionsGroup
