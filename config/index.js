@@ -13,12 +13,13 @@ import { HiReceiptRefund } from 'react-icons/hi'
 export const TRANSACTIONS = [
 	{
 		id: 't-nv',
-		name: 'Ventas',
+		name: 'Notas',
 		icon: FaReceipt,
 		color: 'orange',
 		operation: '+',
 		disabled: false,
 		hasPaymentMethods: true,
+		paymentMethodIds: ['cash', 'transfer'],
 	},
 	{
 		id: 't-fc',
@@ -28,6 +29,7 @@ export const TRANSACTIONS = [
 		operation: '+',
 		disabled: false,
 		hasPaymentMethods: true,
+		paymentMethodIds: ['cash', 'check', 'deposit', 'transfer', 'card'],
 	},
 	{
 		id: 't-fr',
@@ -37,6 +39,7 @@ export const TRANSACTIONS = [
 		operation: '+',
 		disabled: false,
 		hasPaymentMethods: true,
+		paymentMethodIds: ['cash', 'check', 'deposit', 'transfer', 'card'],
 	},
 	{
 		id: 't-ft',
@@ -46,6 +49,7 @@ export const TRANSACTIONS = [
 		operation: '+',
 		disabled: false,
 		hasPaymentMethods: true,
+		paymentMethodIds: ['card'],
 	},
 	{
 		id: 't-cb',
@@ -55,6 +59,7 @@ export const TRANSACTIONS = [
 		operation: '+',
 		disabled: false,
 		hasPaymentMethods: true,
+		paymentMethodIds: ['cash', 'check', 'deposit', 'transfer', 'card'],
 	},
 	{
 		id: 't-dr',
@@ -87,95 +92,92 @@ export const TRANSACTIONS = [
 
 export const PAYMENT_METHODS = [
 	{
-		id: 'p-ef',
+		id: 'cash',
 		name: 'Efectivo',
 		icon: GiBanknote,
 		color: 'green',
 		disabled: false,
+		tenderAmountsIds: 1,
 	},
 	{
-		id: 'p-ch',
+		id: 'check',
 		name: 'Cheque',
 		icon: FaMoneyCheck,
 		color: 'blue',
 		disabled: false,
+		tenderAmountsIds: ['exact', 'other'],
 	},
 	{
-		id: 'p-dp',
+		id: 'deposit',
 		name: 'Depósito',
 		icon: BsBank2,
 		color: 'orange',
 		disabled: false,
+		tenderAmountsIds: ['exact', 'other'],
 	},
 	{
-		id: 'p-tr',
+		id: 'transfer',
 		name: 'Transferencia',
 		icon: BiTransfer,
 		color: 'emerald',
 		disabled: false,
+		tenderAmountsIds: ['exact', 'other'],
 	},
 	{
-		id: 'p-tc',
+		id: 'card',
 		name: 'Tarjeta',
 		icon: BsCreditCardFill,
 		color: 'indigo',
 		disabled: false,
+		tenderAmountsIds: ['exact', 'other'],
 	},
 ]
 
-export const TENDER_AMOUNTS = [
+export const TENDER_OPTIONS = [
+	{
+		id: 'other',
+		name: 'Otro',
+		disabled: false,
+	},
+	{
+		id: 'exact',
+		name: 'Exacto',
+		disabled: false,
+	},
 	{
 		id: 'quarter',
 		name: '25c',
 		value: 0.25,
-		color: 'green',
 		disabled: false,
 	},
 	{
 		id: 'half',
 		name: '50c',
 		value: 0.5,
-		color: 'green',
 		disabled: false,
 	},
 	{
 		id: 'one',
 		name: '$1',
 		value: 1,
-		color: 'green',
 		disabled: false,
 	},
 	{
 		id: 'five',
 		name: '$5',
 		value: 5,
-		color: 'green',
 		disabled: false,
 	},
 	{
 		id: 'ten',
 		name: '$10',
 		value: 10,
-		color: 'green',
 		disabled: false,
 	},
 	{
 		id: 'twenty',
 		name: '$20',
 		value: 20,
-		color: 'green',
-		disabled: false,
-	},
-	{
-		id: 'exact',
-		name: 'Exacto',
-		color: 'green',
-		disabled: false,
-	},
-	{
-		id: 'other',
-		name: 'Otro',
-		color: 'green',
 		disabled: false,
 	},
 ]
