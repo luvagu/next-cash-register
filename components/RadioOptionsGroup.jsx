@@ -6,11 +6,9 @@ function RadioOptionsGroup({
 	items,
 	getSelected,
 	isGroupDisabled,
-	selectedIndex,
+	selectedItem,
 }) {
-	const [selected, setSelected] = useState(
-		selectedIndex > -1 ? items[selectedIndex] : null
-	)
+	const [selected, setSelected] = useState(selectedItem ? selectedItem : null)
 
 	const handleChange = value => {
 		setSelected(value)
@@ -33,13 +31,11 @@ function RadioOptionsGroup({
 						className={({ active, checked }) =>
 							classNames(
 								'relative flex justify-center items-center px-4 py-3 rounded shadow-md focus:outline-none select-none transition-colors',
-								active &&
-									'ring-2 ring-offset-2 ring-offset-slate-300 ring-white ring-opacity-60',
-								(checked || item?.disabledChecked) &&
-									'bg-slate-900 bg-opacity-75',
+								active && 'ring-4 ring-slate-900/50',
+								(checked || item?.disabledChecked) && 'bg-slate-900/75',
 								(isGroupDisabled ||
 									(item?.disabled && !item?.disabledChecked)) &&
-									'bg-slate-300 bg-opacity-75',
+									'bg-slate-300/75',
 								(!checked || !item?.disabled) && 'bg-white',
 								!isGroupDisabled && !item?.disabled && 'cursor-pointer',
 								(isGroupDisabled || item?.disabled) && 'cursor-default'
@@ -72,7 +68,7 @@ RadioOptionsGroup.defaultProps = {
 	items: [],
 	getSelected: () => {},
 	isGroupDisabled: false,
-	selectedIndex: -1,
+	selectedItem: null,
 }
 
 export default RadioOptionsGroup
