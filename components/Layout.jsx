@@ -5,9 +5,7 @@ function Layout({ children, pageTitle }) {
 	return (
 		<Fragment>
 			<Metatags pageTitle={pageTitle} />
-			<div className='container max-w-7xl mx-auto my-4 px-4 md:px-6'>
-				{children}
-			</div>
+			<div className='relative h-screen overflow-x-hidden'>{children}</div>
 		</Fragment>
 	)
 }
