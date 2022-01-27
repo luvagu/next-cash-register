@@ -3,5 +3,13 @@
 @tailwind utilities;
 
 body {
-	@apply bg-gradient-to-r from-yellow-500 to-amber-500;
+	@apply m-0 bg-amber-300/90;
+}
+
+@layer utilities {
+	.nice_scroll_bar {
+		scroll-behavior: smooth;
+		scrollbar-width: thin;
+		scrollbar-color: #c2410c #7c2d12;
+	}
 }
