@@ -20,11 +20,27 @@ export const ACTIONS = {
 	SET_PAYMENT_METHOD: 'SET_PAYMENT_METHOD',
 	UPDATE_PAYMENT_AMOUNT: 'UPDATE_PAYMENT_AMOUNT',
 	SET_TENDER_OPTION: 'SET_TENDER_OPTION',
+	EDIT_TRANSACTION_AMOUNT: 'EDIT_TRANSACTION_AMOUNT',
+	EDIT_PAYMENT_METHOD: 'EDIT_PAYMENT_METHOD',
+	RESET_TRANSACTION: 'RESET_TRANSACTION',
+}
+
+function isNegative(operation) {
+	return operation === '-' ? true : false
+}
+
+export function isTransactionReady(transaction) {
+	if (transaction?.isNegative && transaction?.amount) return true
+
+	if (transaction?.paymentAmount >= transaction?.amount) return true
+
+	return false
 }
 
 const initialState = {
 	isTransactionSelected: false,
 	isSetTransactionAmount: false,
+	isSetPaymentAmount: false,
 	isPaymentMethodSelected: false,
 	transactions: TRANSACTIONS,
 	selectedTransaction: null,
@@ -34,53 +50,86 @@ const initialState = {
 	tenderOptions: TENDER_OPTIONS,
 	paymentMethodTenders: null,
 	selectedTenderOption: TENDER_OPTIONS.find(({ id }) => id === 'other'),
+	defaultPaymentMethodName: PAYMENT_METHODS.find(({ id }) => id === 'cash')
+		.name,
+	transaction: {
+		color: undefined,
+		name: undefined,
+		amount: undefined,
+		operation: undefined,
+		paymentMethod: undefined,
+		paymentAmount: undefined,
+		change: undefined,
+		ts: undefined,
+		isNegative: false,
+		status: undefined,
+	},
 }
 
 const reducer = (state, { type, payload }) => {
-	console.log({ type, payload })
-
 	switch (type) {
 		case ACTIONS.SET_TRANSACTION: {
-			const { icon, ...transaction } = payload
+			const { color, name, amount, operation } = payload
+
 			return {
 				...state,
 				isTransactionSelected: true,
 				isSetTransactionAmount: false,
-				selectedTransaction: { ...transaction },
+				selectedTransaction: payload,
 				transactionPaymentMethods: state.paymentMethods.filter(({ id }) =>
-					transaction?.paymentMethodIds?.includes(id)
+					payload?.paymentMethodIds?.includes(id)
 				),
+				transaction: {
+					...state.transaction,
+					color,
+					name,
+					amount,
+					change: undefined,
+					isNegative: isNegative(operation),
+				},
 			}
 		}
 		case ACTIONS.UPDATE_TRANSACTION_AMOUNT: {
 			const { amount } = payload
+			const { id, operation } = state.selectedTransaction
+
 			return {
 				...state,
 				isSetTransactionAmount: amount > 0,
-				selectedTransaction: {
-					...state.selectedTransaction,
-					amount,
-				},
 				selectedPaymentMethod: null,
-			}
-		}
-		case ACTIONS.SET_PAYMENT_METHOD: {
-			const { icon, ...paymentMethod } = payload
-			const tenders =
-				paymentMethod.tenderAmountsIds === 1
-					? [...state.tenderOptions]
-					: state.tenderOptions.filter(({ id }) =>
-							paymentMethod?.tenderAmountsIds?.includes(id)
-					  )
-			return {
-				...state,
-				isPaymentMethodSelected: true,
-				selectedPaymentMethod: { ...paymentMethod },
 				transactions: state.transactions.map(item => ({
 					...item,
 					disabled: true,
-					disabledChecked: item.id === state.selectedTransaction.id,
+					disabledChecked: item.id === id,
 				})),
+				transaction: {
+					...state.transaction,
+					amount: isNegative(operation) ? -amount : amount,
+					paymentMethod: isNegative(operation)
+						? state.defaultPaymentMethodName
+						: undefined,
+					change: isNegative(operation) ? -amount : undefined,
+				},
+			}
+		}
+		case ACTIONS.SET_PAYMENT_METHOD: {
+			const tenders =
+				payload.tenderAmountsIds === 1
+					? [...state.tenderOptions]
+					: state.tenderOptions.filter(({ id }) =>
+							payload?.tenderAmountsIds?.includes(id)
+					  )
+
+			// const isOnlyExact =
+			// 	state.selectedTransaction?.paymentMethodIds?.length === 1 &&
+			// 	state.selectedTransaction?.paymentMethodIds[0] === 'card' &&
+			// 	tenders.length === 1 &&
+			// 	tenders[0].id === 'exact'
+
+			return {
+				...state,
+				isPaymentMethodSelected: true,
+				selectedPaymentMethod: payload,
 				paymentMethodTenders: tenders.map(option => {
 					if (
 						'value' in option &&
@@ -90,16 +139,23 @@ const reducer = (state, { type, payload }) => {
 					}
 					return option
 				}),
+				// selectedTenderOption: isOnlyExact
+				// 	? tenders[0]
+				// 	: state.selectedTenderOption,
+				transaction: {
+					...state.transaction,
+					paymentMethod: payload.name,
+					// paymentAmount: isOnlyExact ? state.transaction.amount : undefined,
+					// change: 0,
+				},
 			}
 		}
 		case ACTIONS.UPDATE_PAYMENT_AMOUNT: {
 			const { amount } = payload
+
 			return {
 				...state,
-				selectedPaymentMethod: {
-					...state.selectedPaymentMethod,
-					amount,
-				},
+				isSetPaymentAmount: true,
 				transactionPaymentMethods: state.transactionPaymentMethods.map(
 					item => ({
 						...item,
@@ -107,12 +163,75 @@ const reducer = (state, { type, payload }) => {
 						disabledChecked: item.id === state.selectedPaymentMethod.id,
 					})
 				),
+				transaction: {
+					...state.transaction,
+					paymentAmount: amount,
+					change: amount - state.transaction.amount,
+				},
 			}
 		}
 		case ACTIONS.SET_TENDER_OPTION: {
 			return {
 				...state,
 				selectedTenderOption: payload,
+			}
+		}
+		case ACTIONS.EDIT_TRANSACTION_AMOUNT: {
+			return {
+				...state,
+				isPaymentMethodSelected: false,
+				// isSetTransactionAmount: false,
+				selectedPaymentMethod: null,
+				isSetPaymentAmount: false,
+				transactionPaymentMethods: state.transactionPaymentMethods.map(
+					item => ({
+						...item,
+						disabled: false,
+						disabledChecked: false,
+					})
+				),
+				selectedTenderOption: state.tenderOptions.find(
+					({ id }) => id === 'other'
+				),
+				transaction: {
+					...state.transaction,
+					paymentAmount: undefined,
+					paymentMethod: undefined,
+					change: undefined,
+				},
+			}
+		}
+		case ACTIONS.EDIT_PAYMENT_METHOD: {
+			return {
+				...state,
+				isSetPaymentAmount: false,
+				selectedPaymentMethod: null,
+				transactionPaymentMethods: state.transactionPaymentMethods.map(
+					item => ({
+						...item,
+						disabled: false,
+						disabledChecked: false,
+					})
+				),
+				selectedTenderOption: state.tenderOptions.find(
+					({ id }) => id === 'other'
+				),
+				transaction: {
+					...state.transaction,
+					paymentAmount: undefined,
+					paymentMethod: undefined,
+					change: undefined,
+				},
+			}
+		}
+		case ACTIONS.RESET_TRANSACTION: {
+			return {
+				...initialState,
+				transactions: state.transactions.map(item => ({
+					...item,
+					disabled: false,
+					disabledChecked: false,
+				})),
 			}
 		}
 		default:
