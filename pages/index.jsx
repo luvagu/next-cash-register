@@ -1,9 +1,13 @@
 import { Fragment, useEffect, useRef } from 'react'
-import { FaCashRegister } from 'react-icons/fa'
+import { FaCashRegister, FaEdit, FaSyncAlt } from 'react-icons/fa'
 import Layout from '../components/Layout'
 import RadioItemsGroup from '../components/RadioItemsGroup'
 import RadioOptionsGroup from '../components/RadioOptionsGroup'
-import { ACTIONS, useRegister } from '../contexts/RegisterProvider'
+import {
+	ACTIONS,
+	isTransactionReady,
+	useRegister,
+} from '../contexts/RegisterProvider'
 import { classNames, curencyFormatter } from '../utils/helpers'
 
 export default function Home() {
@@ -13,12 +17,14 @@ export default function Home() {
 		isPaymentMethodSelected,
 		isTransactionSelected,
 		isSetTransactionAmount,
+		isSetPaymentAmount,
 		selectedTransaction,
 		selectedPaymentMethod,
 		transactions,
 		transactionPaymentMethods,
 		paymentMethodTenders,
 		selectedTenderOption,
+		transaction,
 	} = state
 
 	const trAmountRef = useRef(null)
@@ -28,31 +34,44 @@ export default function Home() {
 		if (trAmountRef.current) {
 			trAmountRef.current.value = undefined
 		}
-	}, [selectedTransaction?.name])
+	}, [transaction.name])
 
 	useEffect(() => {
 		if (pmAmountRef.current) {
 			pmAmountRef.current.value = undefined
 		}
-	}, [selectedPaymentMethod?.name])
+	}, [transaction.paymentMethod])
 
 	useEffect(() => {
 		if (pmAmountRef.current) {
 			const id = selectedTenderOption.id
-			const amount = selectedTransaction?.amount
+			const amount = transaction.amount
 			const tenderAmount = selectedTenderOption?.value
 			pmAmountRef.current.value =
 				id === 'other' ? undefined : id === 'exact' ? amount : tenderAmount
 		}
-	}, [selectedTenderOption, selectedTransaction?.amount])
+	}, [selectedTenderOption, transaction.amount])
+
+	console.log(state)
 
 	return (
 		<Layout>
 			<div className='grid grid-cols-[auto_350px] gap-2 sm:gap-4 items-start h-full'>
 				<div className='flex flex-col gap-2 sm:gap-4 p-4'>
 					{/* step 1 */}
-					<h2 className='text-base sm:text-lg font-semibold'>
-						1. Seleccionar transacción
+					<h2 className='text-base sm:text-lg font-semibold flex items-center gap-2'>
+						<span>1. Seleccionar transacción</span>
+						{isSetTransactionAmount && (
+							<button
+								type='button'
+								className='text-sm sm:text-base text-cyan-700 hover:text-cyan-900 focus:outline-none'
+								onClick={() => {
+									dispatch({ type: ACTIONS.RESET_TRANSACTION })
+								}}
+							>
+								<FaSyncAlt />
+							</button>
+						)}
 					</h2>
 					<RadioItemsGroup
 						items={transactions}
@@ -65,8 +84,19 @@ export default function Home() {
 					/>
 
 					{/* step 2 */}
-					<h2 className='text-base sm:text-lg font-semibold'>
-						2. Ingresar monto de transacción
+					<h2 className='text-base sm:text-lg font-semibold flex items-center gap-2'>
+						<span>2. Ingresar monto de transacción</span>
+						{isPaymentMethodSelected && (
+							<button
+								type='button'
+								className='text-sm sm:text-base text-cyan-700 hover:text-cyan-900 focus:outline-none'
+								onClick={() => {
+									dispatch({ type: ACTIONS.EDIT_TRANSACTION_AMOUNT })
+								}}
+							>
+								<FaEdit />
+							</button>
+						)}
 					</h2>
 					<div className='relative max-w-xs rounded shadow-md'>
 						<div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
@@ -84,7 +114,6 @@ export default function Home() {
 							min={0}
 							step={0.01}
 							placeholder='0.00'
-							value={selectedTransaction?.amount}
 							disabled={!isTransactionSelected || isPaymentMethodSelected}
 							required
 							onChange={e =>
@@ -99,8 +128,19 @@ export default function Home() {
 					{selectedTransaction && selectedTransaction?.hasPaymentMethods && (
 						<Fragment>
 							{/* step 3 */}
-							<h2 className='text-base sm:text-lg font-semibold'>
-								3. Seleccionar forma de pago
+							<h2 className='text-base sm:text-lg font-semibold flex items-center gap-2'>
+								<span>3. Seleccionar forma de pago</span>
+								{isSetPaymentAmount && (
+									<button
+										type='button'
+										className='text-sm sm:text-base text-cyan-700 hover:text-cyan-900 focus:outline-none'
+										onClick={() => {
+											dispatch({ type: ACTIONS.EDIT_PAYMENT_METHOD })
+										}}
+									>
+										<FaEdit />
+									</button>
+								)}
 							</h2>
 							<RadioItemsGroup
 								items={transactionPaymentMethods}
@@ -133,7 +173,7 @@ export default function Home() {
 														tender.id === 'other'
 															? undefined
 															: tender.id === 'exact'
-															? selectedTransaction?.amount
+															? transaction.amount
 															: tender?.value,
 												},
 											})
@@ -156,7 +196,7 @@ export default function Home() {
 													: isPaymentMethodSelected && 'disabled:text-slate-700'
 											)}
 											type='number'
-											min={selectedTransaction?.amount || 0}
+											min={transaction.amount || 0}
 											step={0.01}
 											placeholder='0.00'
 											disabled={selectedTenderOption?.id !== 'other'}
@@ -175,33 +215,60 @@ export default function Home() {
 					)}
 				</div>
 				<aside className='relative h-full bg-slate-300/75'>
-					<div className='absolute top-0 left-0 right-0 bg-slate-50/90 shadow-sm py-2 px-4 pb-4 flex flex-col gap-1'>
+					<div className='absolute top-0 left-0 right-0 bg-white shadow-sm py-2 px-4 pb-4 flex flex-col gap-1'>
 						<h2 className='text-base sm:text-lg font-semibold'>
 							Transacción actual
 						</h2>
 						<div className='flex justify-between text-sm sm:text-base font-medium text-slate-900'>
-							<p>Total</p>
-							<p>{curencyFormatter(selectedTransaction?.amount)}</p>
+							<p>
+								Total{' '}
+								{transaction.name && (
+									<Fragment>
+										<span className={'text-sm text-amber-900'}>
+											({transaction.name})
+										</span>
+									</Fragment>
+								)}
+							</p>
+							<p
+								className={classNames(transaction.isNegative && 'text-red-500')}
+							>
+								{curencyFormatter(transaction.amount)}
+							</p>
 						</div>
 						<div className='flex justify-between text-sm sm:text-base font-medium text-slate-900'>
-							<p>Pagado</p>
-							<p>{curencyFormatter(selectedPaymentMethod?.amount)}</p>
+							<p>
+								Pago{' '}
+								{transaction.paymentMethod && (
+									<Fragment>
+										<span className={'text-sm text-amber-900'}>
+											({transaction.paymentMethod})
+										</span>
+									</Fragment>
+								)}
+							</p>
+							<p>{curencyFormatter(transaction.paymentAmount)}</p>
 						</div>
 						<div className='h-1 mt-1 border-b-2 border-dashed border-slate-300' />
-						<div className='flex justify-between text-sm sm:text-base font-bold text-slate-900'>
+						<div className='flex justify-between text-base sm:text-lg font-semibold text-slate-900'>
 							<p>Cambio</p>
-							<p>{curencyFormatter(-52)}</p>
+							<p
+								className={classNames(transaction.isNegative && 'text-red-500')}
+							>
+								{curencyFormatter(transaction.change)}
+							</p>
 						</div>
+						{/* {transaction.isNegative && (
+							<p className='mt-0.5 text-sm text-red-500'>
+								El dinero saldrá de caja
+							</p>
+						)} */}
 						{/* final */}
 						<div className='mt-2'>
 							<button
 								type='button'
-								className='relative flex justify-center items-center gap-2 sm:gap-2 px-4 py-2 w-full max-w-xs rounded shadow-md text-sm sm:text-base text-slate-50 font-semibold bg-lime-700 focus:outline-none focus:bg-lime-800 focus:text-white focus:ring-4 focus:ring-slate-900/50 disabled:bg-slate-300/75 disabled:text-slate-500 disabled:shadow-none transition-colors'
-								disabled={
-									!(
-										selectedPaymentMethod?.amount >= selectedTransaction?.amount
-									)
-								}
+								className='relative flex justify-center items-center gap-2 sm:gap-2 px-4 py-2 w-full max-w-xs rounded shadow-md text-sm sm:text-base text-slate-50 font-semibold bg-lime-600 focus:outline-none focus:bg-lime-700 focus:text-white focus:ring-4 focus:ring-lime-900/50 disabled:bg-slate-300/75 disabled:text-slate-500 disabled:shadow-none transition-colors'
+								disabled={!isTransactionReady(transaction)}
 							>
 								<FaCashRegister />
 								<span>Finalizar</span>
