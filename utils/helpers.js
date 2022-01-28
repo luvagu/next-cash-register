@@ -11,6 +11,5 @@ export function curencyFormatter(amount) {
 		currencyDisplay: 'narrowSymbol',
 		minimumFractionDigits: 2,
 		currencySign: 'accounting',
-		// signDisplay: 'negative',
 	}).format(amount)
 }
