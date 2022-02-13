@@ -70,7 +70,7 @@ const initialState = {
 	paymentMethodTenders: null,
 	selectedTenderOption: { ...DEFAULT_TENDER_OPTION },
 	transaction: { ...TRANSACTION_TEMPLATE },
-	doneTransactions: [],
+	transactionsHistory: [],
 }
 
 const reducer = (state, { type, payload }) => {
@@ -136,25 +136,14 @@ const reducer = (state, { type, payload }) => {
 				return option
 			})
 
-			// const isOnlyExact =
-			// 	state.selectedTransaction?.paymentMethodIds?.length === 1 &&
-			// 	state.selectedTransaction?.paymentMethodIds[0] === 'card' &&
-			// 	tenders.length === 1 &&
-			// 	tenders[0].id === 'exact'
-
 			return {
 				...state,
 				isPaymentMethodSelected: true,
 				selectedPaymentMethod: payload,
 				paymentMethodTenders: activeTenders,
-				// selectedTenderOption: isOnlyExact
-				// 	? tenders[0]
-				// 	: state.selectedTenderOption,
 				transaction: {
 					...state.transaction,
 					paymentMethod: payload.name,
-					// paymentAmount: isOnlyExact ? state.transaction.amount : undefined,
-					// change: 0,
 				},
 			}
 		}
@@ -188,7 +177,6 @@ const reducer = (state, { type, payload }) => {
 			return {
 				...state,
 				isPaymentMethodSelected: false,
-				// isSetTransactionAmount: false,
 				selectedPaymentMethod: null,
 				isSetPaymentAmount: false,
 				transactionPaymentMethods: state.transactionPaymentMethods.map(
@@ -248,6 +236,10 @@ const reducer = (state, { type, payload }) => {
 				selectedPaymentMethod: null,
 				paymentMethodTenders: null,
 				selectedTenderOption: { ...DEFAULT_TENDER_OPTION },
+				tenderOptions: state.tenderOptions.map(option => ({
+					...option,
+					disabled: false,
+				})),
 				transaction: { ...TRANSACTION_TEMPLATE },
 				transactions: state.transactions.map(item => ({
 					...item,
@@ -274,13 +266,17 @@ const reducer = (state, { type, payload }) => {
 				selectedPaymentMethod: null,
 				paymentMethodTenders: null,
 				selectedTenderOption: { ...DEFAULT_TENDER_OPTION },
+				tenderOptions: state.tenderOptions.map(option => ({
+					...option,
+					disabled: false,
+				})),
 				transaction: { ...TRANSACTION_TEMPLATE },
 				transactions: state.transactions.map(item => ({
 					...item,
 					disabled: false,
 					disabledChecked: false,
 				})),
-				doneTransactions: [latestTransction, ...state.doneTransactions],
+				transactionsHistory: [latestTransction, ...state.transactionsHistory],
 			}
 		}
 		default:
