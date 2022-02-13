@@ -8,11 +8,11 @@ export const useRegister = () => useContext(RegisterContext)
 // TODO's:
 // - disable payment methods when payment amount is enetered or exact amount checkbox is checked --done
 // - add radio options for payment amounts [exact / 25c / 50c / 1 / 5 / 10 / 20 / other] and disable option if less than amount --done
-// - when exact amount is checked, autocomplete paynment amount input with transaction amount
-// - do NOT show tender amounts with values when a payment method cannot use it - add flags to payment methods
-// - show "Finalizar Transacccion" button when all steps are done
-// - add cancel buttons next to each step to cancel the step
-// - Only show steps 3 & 4 for positive transactions
+// - when exact amount is checked, autocomplete paynment amount input with transaction amount --done
+// - when transaction amount is greater that tender amounts, disable tender amount(s) --done
+// - enable "Finalizar" button when all steps are done --done
+// - add edit buttons next to each step to edit the step --done
+// - Only show steps 3 & 4 for positive transactions --done
 
 export const ACTIONS = {
 	SET_TRANSACTION: 'SET_TRANSACTION',
@@ -23,6 +23,7 @@ export const ACTIONS = {
 	EDIT_TRANSACTION_AMOUNT: 'EDIT_TRANSACTION_AMOUNT',
 	EDIT_PAYMENT_METHOD: 'EDIT_PAYMENT_METHOD',
 	RESET_TRANSACTION: 'RESET_TRANSACTION',
+	SAVE_TRANSACTION: 'SAVE_TRANSACTION',
 }
 
 function isNegative(operation) {
@@ -37,33 +38,39 @@ export function isTransactionReady(transaction) {
 	return false
 }
 
+const TRANSACTION_TEMPLATE = {
+	color: undefined,
+	name: undefined,
+	amount: undefined,
+	paymentMethod: undefined,
+	paymentAmount: undefined,
+	change: undefined,
+	ts: undefined,
+	isNegative: false,
+	status: 'pending',
+}
+
+const DEFAULT_TENDER_OPTION = TENDER_OPTIONS.find(({ id }) => id === 'other')
+
+const DEFAULT_PAYMENT_METHOD_NAME = PAYMENT_METHODS.find(
+	({ id }) => id === 'cash'
+).name
+
 const initialState = {
 	isTransactionSelected: false,
 	isSetTransactionAmount: false,
 	isSetPaymentAmount: false,
 	isPaymentMethodSelected: false,
-	transactions: TRANSACTIONS,
+	transactions: TRANSACTIONS.slice(),
 	selectedTransaction: null,
 	transactionPaymentMethods: null,
-	paymentMethods: PAYMENT_METHODS,
+	paymentMethods: PAYMENT_METHODS.slice(),
 	selectedPaymentMethod: null,
-	tenderOptions: TENDER_OPTIONS,
+	tenderOptions: TENDER_OPTIONS.slice(),
 	paymentMethodTenders: null,
-	selectedTenderOption: TENDER_OPTIONS.find(({ id }) => id === 'other'),
-	defaultPaymentMethodName: PAYMENT_METHODS.find(({ id }) => id === 'cash')
-		.name,
-	transaction: {
-		color: undefined,
-		name: undefined,
-		amount: undefined,
-		operation: undefined,
-		paymentMethod: undefined,
-		paymentAmount: undefined,
-		change: undefined,
-		ts: undefined,
-		isNegative: false,
-		status: undefined,
-	},
+	selectedTenderOption: { ...DEFAULT_TENDER_OPTION },
+	transaction: { ...TRANSACTION_TEMPLATE },
+	doneTransactions: [],
 }
 
 const reducer = (state, { type, payload }) => {
@@ -106,7 +113,7 @@ const reducer = (state, { type, payload }) => {
 					...state.transaction,
 					amount: isNegative(operation) ? -amount : amount,
 					paymentMethod: isNegative(operation)
-						? state.defaultPaymentMethodName
+						? DEFAULT_PAYMENT_METHOD_NAME
 						: undefined,
 					change: isNegative(operation) ? -amount : undefined,
 				},
@@ -119,6 +126,15 @@ const reducer = (state, { type, payload }) => {
 					: state.tenderOptions.filter(({ id }) =>
 							payload?.tenderAmountsIds?.includes(id)
 					  )
+			const activeTenders = tenders.map(option => {
+				if (
+					option?.value !== undefined &&
+					option?.value < state.transaction.amount
+				) {
+					option.disabled = true
+				}
+				return option
+			})
 
 			// const isOnlyExact =
 			// 	state.selectedTransaction?.paymentMethodIds?.length === 1 &&
@@ -130,15 +146,7 @@ const reducer = (state, { type, payload }) => {
 				...state,
 				isPaymentMethodSelected: true,
 				selectedPaymentMethod: payload,
-				paymentMethodTenders: tenders.map(option => {
-					if (
-						'value' in option &&
-						option.value < state.selectedTransaction.amount
-					) {
-						option.disabled = true
-					}
-					return option
-				}),
+				paymentMethodTenders: activeTenders,
 				// selectedTenderOption: isOnlyExact
 				// 	? tenders[0]
 				// 	: state.selectedTenderOption,
@@ -193,6 +201,10 @@ const reducer = (state, { type, payload }) => {
 				selectedTenderOption: state.tenderOptions.find(
 					({ id }) => id === 'other'
 				),
+				tenderOptions: state.tenderOptions.map(option => ({
+					...option,
+					disabled: false,
+				})),
 				transaction: {
 					...state.transaction,
 					paymentAmount: undefined,
@@ -226,12 +238,49 @@ const reducer = (state, { type, payload }) => {
 		}
 		case ACTIONS.RESET_TRANSACTION: {
 			return {
-				...initialState,
+				...state,
+				isTransactionSelected: false,
+				isSetTransactionAmount: false,
+				isSetPaymentAmount: false,
+				isPaymentMethodSelected: false,
+				selectedTransaction: null,
+				transactionPaymentMethods: null,
+				selectedPaymentMethod: null,
+				paymentMethodTenders: null,
+				selectedTenderOption: { ...DEFAULT_TENDER_OPTION },
+				transaction: { ...TRANSACTION_TEMPLATE },
 				transactions: state.transactions.map(item => ({
 					...item,
 					disabled: false,
 					disabledChecked: false,
 				})),
+			}
+		}
+		case ACTIONS.SAVE_TRANSACTION: {
+			const latestTransction = {
+				...state.transaction,
+				ts: Date.now(),
+				status: 'done',
+			}
+
+			return {
+				...state,
+				isTransactionSelected: false,
+				isSetTransactionAmount: false,
+				isSetPaymentAmount: false,
+				isPaymentMethodSelected: false,
+				selectedTransaction: null,
+				transactionPaymentMethods: null,
+				selectedPaymentMethod: null,
+				paymentMethodTenders: null,
+				selectedTenderOption: { ...DEFAULT_TENDER_OPTION },
+				transaction: { ...TRANSACTION_TEMPLATE },
+				transactions: state.transactions.map(item => ({
+					...item,
+					disabled: false,
+					disabledChecked: false,
+				})),
+				doneTransactions: [latestTransction, ...state.doneTransactions],
 			}
 		}
 		default:
