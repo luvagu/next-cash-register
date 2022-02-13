@@ -25,6 +25,7 @@ export default function Home() {
 		paymentMethodTenders,
 		selectedTenderOption,
 		transaction,
+		doneTransactions,
 	} = state
 
 	const trAmountRef = useRef(null)
@@ -51,8 +52,6 @@ export default function Home() {
 				id === 'other' ? undefined : id === 'exact' ? amount : tenderAmount
 		}
 	}, [selectedTenderOption, transaction.amount])
-
-	console.log(state)
 
 	return (
 		<Layout>
@@ -269,6 +268,7 @@ export default function Home() {
 								type='button'
 								className='relative flex justify-center items-center gap-2 sm:gap-2 px-4 py-2 w-full max-w-xs rounded shadow-md text-sm sm:text-base text-slate-50 font-semibold bg-lime-600 focus:outline-none focus:bg-lime-700 focus:text-white focus:ring-4 focus:ring-lime-900/50 disabled:bg-slate-300/75 disabled:text-slate-500 disabled:shadow-none transition-colors'
 								disabled={!isTransactionReady(transaction)}
+								onClick={() => dispatch({ type: ACTIONS.SAVE_TRANSACTION })}
 							>
 								<FaCashRegister />
 								<span>Finalizar</span>
