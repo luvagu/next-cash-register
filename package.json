@@ -10,20 +10,20 @@
 	"dependencies": {
 		"@headlessui/react": "^1.4.3",
 		"axios": "^0.25.0",
-		"faunadb": "^4.4.1",
-		"next": "^12.0.8",
+		"faunadb": "^4.5.2",
+		"next": "^12.0.10",
 		"nprogress": "^0.2.0",
 		"react": "17.0.2",
 		"react-dom": "17.0.2",
 		"react-icons": "^4.3.1",
-		"swr": "^1.1.2"
+		"swr": "^1.2.1"
 	},
 	"devDependencies": {
 		"@tailwindcss/forms": "^0.4.0",
 		"autoprefixer": "^10.4.2",
 		"eslint": "8.7.0",
 		"eslint-config-next": "12.0.8",
-		"postcss": "^8.4.5",
-		"tailwindcss": "^3.0.15"
+		"postcss": "^8.4.6",
+		"tailwindcss": "^3.0.22"
 	}
 }
