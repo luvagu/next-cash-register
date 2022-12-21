@@ -77,7 +77,7 @@ function TransactionDetails() {
 			<div className='mt-2'>
 				<button
 					type='button'
-					className='relative flex justify-center items-center gap-2 sm:gap-2 px-4 py-2 w-full max-w-xs rounded shadow-md text-sm sm:text-base text-slate-50 font-semibold bg-lime-600 focus:outline-none focus:bg-lime-700 focus:text-white focus:ring-4 focus:ring-lime-900/50 disabled:bg-slate-300/75 disabled:text-slate-500 disabled:shadow-none transition-colors'
+					className='relative flex justify-center items-center gap-2 sm:gap-2 px-4 py-2 w-full  rounded shadow-md text-sm sm:text-base text-slate-50 font-semibold bg-lime-600 focus:outline-none focus:bg-lime-700 focus:text-white focus:ring-4 focus:ring-lime-900/50 disabled:bg-slate-300/75 disabled:text-slate-500 disabled:shadow-none transition-colors'
 					disabled={!isTransactionReady(transaction)}
 					onClick={() => dispatch({ type: ACTIONS.SAVE_TRANSACTION })}
 				>

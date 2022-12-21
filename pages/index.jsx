@@ -52,8 +52,8 @@ export default function Home() {
 
 	return (
 		<Layout>
-			<div className='grid grid-cols-[auto_350px] gap-2 sm:gap-4 items-start h-full'>
-				<div className='flex flex-col gap-2 sm:gap-4 p-4'>
+			<div className='flex flex-col sm:grid sm:grid-cols-[auto_350px] gap-2 sm:gap-4 items-start h-full'>
+				<div className='flex flex-col self-stretch gap-2 sm:gap-4 p-4'>
 					{/* step 1 */}
 					<StepTitleWithButton
 						title='1. Seleccionar transacción'
@@ -159,7 +159,7 @@ export default function Home() {
 					)}
 				</div>
 
-				<aside className='relative h-full bg-slate-300/75'>
+				<aside className='relative w-full h-full bg-slate-300/75'>
 					<TransactionDetails />
 				</aside>
 			</div>

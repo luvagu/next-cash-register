@@ -32,17 +32,18 @@ function RadioOptionsGroup({
 							classNames(
 								'relative flex justify-center items-center px-4 py-3 rounded shadow-md focus:outline-none select-none transition-colors',
 								active && 'ring-4 ring-slate-900/50',
-								(checked || item?.disabledChecked) && 'bg-slate-900/75',
-								(isGroupDisabled ||
-									(item?.disabled && !item?.disabledChecked)) &&
-									'bg-slate-300/75',
-								(!checked || !item?.disabled) && 'bg-white',
-								!isGroupDisabled && !item?.disabled && 'cursor-pointer',
-								(isGroupDisabled || item?.disabled) && 'cursor-default'
+								checked || item?.disabledChecked
+									? 'bg-slate-900/75'
+									: item?.disabled && !item?.disabledChecked
+									? 'bg-slate-300/75'
+									: 'bg-white',
+								isGroupDisabled || item?.disabled
+									? 'cursor-default'
+									: 'cursor-pointer'
 							)
 						}
 					>
-						{({ checked }) => (
+						{({ active, checked }) => (
 							<RadioGroup.Label
 								as='h2'
 								className={classNames(

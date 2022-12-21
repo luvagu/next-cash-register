@@ -68,13 +68,14 @@ function RadioItemsGroup({ items, getSelected, isGroupDisabled }) {
 							classNames(
 								'relative flex flex-col justify-center items-center gap-1 sm:gap-2 px-4 py-3 rounded shadow-md focus:outline-none select-none transition-colors',
 								active && 'ring-4 ring-slate-900/50',
-								(checked || item?.disabledChecked) && 'bg-slate-900/75',
-								(isGroupDisabled ||
-									(item?.disabled && !item?.disabledChecked)) &&
-									'bg-slate-300/75',
-								(!checked || !item?.disabled) && 'bg-white',
-								!isGroupDisabled && !item?.disabled && 'cursor-pointer',
-								(isGroupDisabled || item?.disabled) && 'cursor-default'
+								checked || item?.disabledChecked
+									? 'bg-slate-900/75'
+									: item?.disabled && !item?.disabledChecked
+									? 'bg-slate-300/75'
+									: 'bg-white',
+								isGroupDisabled || item?.disabled
+									? 'cursor-default'
+									: 'cursor-pointer'
 							)
 						}
 					>
@@ -85,9 +86,7 @@ function RadioItemsGroup({ items, getSelected, isGroupDisabled }) {
 									className={classNames(
 										'text-xs sm:text-sm font-semibold whitespace-nowrap truncate',
 										(checked || item?.disabledChecked) && 'text-white',
-										(isGroupDisabled ||
-											(item?.disabled && !item?.disabledChecked)) &&
-											'text-gray-600',
+										item?.disabled && !item?.disabledChecked && 'text-gray-600',
 										!checked && !item?.disabled && 'text-amber-900'
 									)}
 								>
@@ -96,7 +95,7 @@ function RadioItemsGroup({ items, getSelected, isGroupDisabled }) {
 								<RadioGroup.Description
 									className={classNames(
 										'inline',
-										//(checked || item?.disabledChecked) && 'text-opacity-95',
+										(checked || item?.disabledChecked) && 'text-opacity-95',
 										(isGroupDisabled ||
 											(item?.disabled && !item?.disabledChecked)) &&
 											'text-gray-600',

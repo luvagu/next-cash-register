@@ -10,7 +10,7 @@ import {
 import { GiBanknote, GiPayMoney, GiTakeMyMoney } from 'react-icons/gi'
 import { HiReceiptRefund } from 'react-icons/hi'
 
-export const TRANSACTIONS = [
+export const TRANSACTIONS = Object.freeze([
 	{
 		id: 't-nv',
 		name: 'Notas',
@@ -88,9 +88,9 @@ export const TRANSACTIONS = [
 		disabled: false,
 		hasPaymentMethods: false,
 	},
-]
+])
 
-export const PAYMENT_METHODS = [
+export const PAYMENT_METHODS = Object.freeze([
 	{
 		id: 'cash',
 		name: 'Efectivo',
@@ -131,9 +131,9 @@ export const PAYMENT_METHODS = [
 		disabled: false,
 		tenderAmountsIds: ['exact', 'other'],
 	},
-]
+])
 
-export const TENDER_OPTIONS = [
+export const TENDER_OPTIONS = Object.freeze([
 	{
 		id: 'other',
 		name: 'Otro',
@@ -142,6 +142,18 @@ export const TENDER_OPTIONS = [
 	{
 		id: 'exact',
 		name: 'Exacto',
+		disabled: false,
+	},
+	{
+		id: 'nicke',
+		name: '5c',
+		value: 0.05,
+		disabled: false,
+	},
+	{
+		id: 'dime',
+		name: '10c',
+		value: 0.1,
 		disabled: false,
 	},
 	{
@@ -180,4 +192,4 @@ export const TENDER_OPTIONS = [
 		value: 20,
 		disabled: false,
 	},
-]
+])
