@@ -68,7 +68,7 @@ const initialState = {
 	selectedPaymentMethod: null,
 	tenderOptions: TENDER_OPTIONS,
 	paymentMethodTenders: null,
-	selectedTenderOption: { ...DEFAULT_TENDER_OPTION },
+	selectedTenderOption: DEFAULT_TENDER_OPTION,
 	transaction: { ...TRANSACTION_TEMPLATE },
 	transactionsHistory: [],
 }
@@ -235,7 +235,7 @@ const reducer = (state, { type, payload }) => {
 				transactionPaymentMethods: null,
 				selectedPaymentMethod: null,
 				paymentMethodTenders: null,
-				selectedTenderOption: { ...DEFAULT_TENDER_OPTION },
+				selectedTenderOption: DEFAULT_TENDER_OPTION,
 				tenderOptions: state.tenderOptions.map(option => ({
 					...option,
 					disabled: false,
@@ -265,7 +265,7 @@ const reducer = (state, { type, payload }) => {
 				transactionPaymentMethods: null,
 				selectedPaymentMethod: null,
 				paymentMethodTenders: null,
-				selectedTenderOption: { ...DEFAULT_TENDER_OPTION },
+				selectedTenderOption: DEFAULT_TENDER_OPTION,
 				tenderOptions: state.tenderOptions.map(option => ({
 					...option,
 					disabled: false,

@@ -2,7 +2,6 @@ import { Fragment, useEffect, useRef } from 'react'
 import { ACTIONS, useRegister } from '../contexts/RegisterProvider'
 
 import Layout from '../components/Layout'
-import RadioItemsGroup from '../components/RadioItemsGroup'
 import RadioOptionsGroup from '../components/RadioOptionsGroup'
 import StepTitleWithButton from '../components/StepTitleWithButton'
 import TransactionInputAmount from '../components/TransactionInputAmount'
@@ -23,6 +22,7 @@ export default function Home() {
 		paymentMethodTenders,
 		selectedTenderOption,
 		transaction,
+		transactionsHistory,
 	} = state
 
 	const trAmountRef = useRef(null)
@@ -62,7 +62,7 @@ export default function Home() {
 							dispatch({ type: ACTIONS.RESET_TRANSACTION })
 						}}
 					/>
-					<RadioItemsGroup
+					<RadioOptionsGroup
 						items={transactions}
 						getSelected={transaction =>
 							dispatch({
@@ -103,7 +103,7 @@ export default function Home() {
 									dispatch({ type: ACTIONS.EDIT_PAYMENT_METHOD })
 								}}
 							/>
-							<RadioItemsGroup
+							<RadioOptionsGroup
 								items={transactionPaymentMethods}
 								getSelected={paymentMethod =>
 									dispatch({
@@ -138,7 +138,8 @@ export default function Home() {
 											})
 										}}
 										isGroupDisabled={!isPaymentMethodSelected}
-										selectedItem={selectedTenderOption}
+										selectedItem={paymentMethodTenders[0]}
+										isIconVariant={false}
 									/>
 									<TransactionInputAmount
 										ref={pmAmountRef}
